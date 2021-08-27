@@ -1,4 +1,3 @@
-/*
 package com.example.exchance_server.email;
 
 import lombok.AllArgsConstructor;
@@ -14,7 +13,7 @@ import javax.mail.internet.MimeMessage;
 
 @Service
 @AllArgsConstructor
-public class EmailService implements EmailSender{
+public class EmailService implements EmailSender {
 
     private final static Logger LOGGER = LoggerFactory
             .getLogger(EmailService.class);
@@ -24,14 +23,14 @@ public class EmailService implements EmailSender{
     @Override
     @Async
     public void send(String to, String email) {
-        try {
+        try{
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper =
                     new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setText(email, true);
             helper.setTo(to);
             helper.setSubject("Confirm your email");
-            helper.setFrom("nikolaicxxi@gmail.com");
+            helper.setFrom("exchance@ssau.ru");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("failed to send email", e);
@@ -39,4 +38,3 @@ public class EmailService implements EmailSender{
         }
     }
 }
-*/

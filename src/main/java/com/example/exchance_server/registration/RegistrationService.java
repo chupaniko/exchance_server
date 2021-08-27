@@ -3,8 +3,8 @@ package com.example.exchance_server.registration;
 import com.example.exchance_server.appuser.AppUser;
 import com.example.exchance_server.appuser.AppUserRole;
 import com.example.exchance_server.appuser.AppUserService;
+import com.example.exchance_server.email.EmailSender;
 import com.example.exchance_server.registration.token.ConfirmationToken;
-//import com.example.exchance_server.email.EmailSender;
 import com.example.exchance_server.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class RegistrationService {
     private final AppUserService appUserService;
     private final EmailValidator emailValidator;
     private final ConfirmationTokenService confirmationTokenService;
-    //private final EmailSender emailSender;
+    private final EmailSender emailSender;
 
     public String register(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.
@@ -41,9 +41,9 @@ public class RegistrationService {
         );
 
         String link = "http://localhost:8080/api/v1/registration/confirm?token=" + token;
-        /*emailSender.send(
+        emailSender.send(
                 request.getEmail(),
-                buildEmail(request.getFirstName(), link));*/
+                buildEmail(request.getFirstName(), link));
 
         return token;
     }
