@@ -7,6 +7,7 @@ import com.example.exchance_server.email.EmailSender;
 import com.example.exchance_server.registration.token.ConfirmationToken;
 import com.example.exchance_server.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
