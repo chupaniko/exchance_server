@@ -35,8 +35,8 @@ public class EmailService implements EmailSender {
             emailProperties.put("mail.smtp.starttls.enable", "true");
             Session mailSession = Session.getDefaultInstance(System.getProperties(), null);
 
-            String botEmail = "aethleet@gmail.com";
-            String botPassword = "n0n4cann0n";
+            String botEmail = "example@gmail.com";
+            String botPassword = "password";
 
             String emailHost = "smtp.gmail.com";
             Transport transport = mailSession.getTransport("smtp");
