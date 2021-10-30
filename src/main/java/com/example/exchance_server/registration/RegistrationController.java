@@ -11,6 +11,7 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping
+    @CrossOrigin(origins = "http://localhost:3000")
     public String register(@RequestBody RegistrationRequest request) {
 
         return registrationService.register(request);

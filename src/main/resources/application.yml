@@ -5,10 +5,10 @@ server:
 
 spring:
   datasource:
-    password: n0n4cann0n
     url: jdbc:postgresql://localhost:5432/registration
     username: postgres
-    driverClassName: org.postgresql.Driver
+    password: n0n4cann0n
+#    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -17,15 +17,30 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
+#    database: postgresql
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username:
-    password:
+    host: localhost
+    port: 1025
+    username: hello
+    password: hello
+    #host: smtp.gmail.com
+    #port: 587
+    #username:
+    #password:
 
   properties:
     mail:
       smtp:
+        ssl:
+          trust: "*"
         auth: true
-      starttls:
-        enable: true
+        starttls:
+          enable: true
+        connectiontimeout: 5000
+        timeout: 3000
+        writetimeout: 5000
+  #    mail:
+  #      smtp:
+  #        auth: true
+  #      starttls:
+  #        enable: true

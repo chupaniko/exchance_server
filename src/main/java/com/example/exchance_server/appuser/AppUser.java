@@ -1,9 +1,9 @@
 package com.example.exchance_server.appuser;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,14 +11,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @NoArgsConstructor
 @Entity
+// TODO Заменить на свой интерфейс для юзера
 public class AppUser implements UserDetails {
-
 
     @SequenceGenerator(
             name = "student_sequence",
@@ -95,5 +95,19 @@ public class AppUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        AppUser appUser = (AppUser) o;
+
+        return Objects.equals(id, appUser.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 741337932;
     }
 }
