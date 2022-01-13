@@ -35,7 +35,7 @@ public class EmailService implements EmailSender {
             helper.setText(emailText, true);
             helper.setTo(recipient);
             helper.setSubject("Confirm your email");
-            helper.setFrom("hello@amigoscode.com");
+            helper.setFrom("exchance@ssau.ru");
             /*Properties emailProperties = System.getProperties();
             emailProperties.put("mail.smtp.port", "587");
             emailProperties.put("mail.smtp.auth", "true");

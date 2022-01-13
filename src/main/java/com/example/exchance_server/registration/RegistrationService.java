@@ -22,6 +22,7 @@ public class RegistrationService {
     private final EmailSender emailSender;
 
     public String register(RegistrationRequest request) {
+        // проверка домена почты на принадлежность к вузу?
         boolean isValidEmail = emailValidator.
                 test(request.getEmail());
 

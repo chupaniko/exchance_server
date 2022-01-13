@@ -21,14 +21,14 @@ import java.util.Objects;
 public class AppUser implements UserDetails {
 
     @SequenceGenerator(
-            name = "student_sequence",
-            sequenceName = "student_sequence",
+            name = "sequence",
+            sequenceName = "sequence",
             allocationSize = 1
     )
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "student_sequence"
+            generator = "sequence"
     )
     private Long id;
     private String firstName;
@@ -40,6 +40,7 @@ public class AppUser implements UserDetails {
     private Boolean locked = false;
     private Boolean enabled = false;
 
+    // для регистрации
     public AppUser(String firstName,
                    String lastName,
                    String email,
@@ -47,6 +48,17 @@ public class AppUser implements UserDetails {
                    AppUserRole appUserRole) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.appUserRole = appUserRole;
+    }
+
+    // для аутентификации
+    public AppUser(String email,
+                   String password,
+                   AppUserRole appUserRole) {
+        this.firstName = "";
+        this.lastName = "";
         this.email = email;
         this.password = password;
         this.appUserRole = appUserRole;
@@ -75,6 +87,10 @@ public class AppUser implements UserDetails {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     @Override
