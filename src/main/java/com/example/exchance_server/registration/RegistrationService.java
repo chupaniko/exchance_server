@@ -22,7 +22,7 @@ public class RegistrationService {
     private final EmailSender emailSender;
 
     public String register(RegistrationRequest request) {
-        // проверка домена почты на принадлежность к вузу?
+        // TODO: проверка домена почты на принадлежность к вузу?
         boolean isValidEmail = emailValidator.
                 test(request.getEmail());
 
@@ -67,7 +67,7 @@ public class RegistrationService {
 
         confirmationTokenService.setConfirmedAt(token);
         appUserService.enableAppUser(
-                confirmationToken.getAppUser().getEmail());
+                confirmationToken.getAppUser().getEmail(), token);
         return "confirmed";
     }
 

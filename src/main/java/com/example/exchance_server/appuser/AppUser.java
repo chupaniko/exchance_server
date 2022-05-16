@@ -17,7 +17,6 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @Entity
-// TODO Заменить на свой интерфейс для юзера
 public class AppUser implements UserDetails {
 
     @SequenceGenerator(
@@ -31,6 +30,7 @@ public class AppUser implements UserDetails {
             generator = "sequence"
     )
     private Long id;
+    private String token;
     private String firstName;
     private String lastName;
     private String email;
@@ -93,6 +93,10 @@ public class AppUser implements UserDetails {
         return id;
     }
 
+    public String getToken() {
+        return token;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -122,8 +126,10 @@ public class AppUser implements UserDetails {
         return Objects.equals(id, appUser.id);
     }
 
+    // TODO: сделать нормальный метод возвращеня хеш-кода
     @Override
     public int hashCode() {
+        //return Objects.hash(id, token, firstName, lastName, ...);
         return 741337932;
     }
 }

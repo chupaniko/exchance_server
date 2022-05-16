@@ -70,8 +70,8 @@ public class AppUserService implements UserDetailsService {
         return token;
     }
 
-    public int enableAppUser(String email) {
-        return appUserRepository.enableAppUser(email);
+    public int enableAppUser(String email, String token) {
+        return appUserRepository.enableAppUser(email, token);
     }
 
     public String authUser(AppUser requestUser) {
@@ -79,7 +79,7 @@ public class AppUserService implements UserDetailsService {
         appUser = appUserRepository.findByEmail(requestUser.getEmail()).orElse(new AppUser("", "", AppUserRole.USER));
 
         if (Objects.equals(appUser.getEmail(), requestUser.getEmail()) && bCryptPasswordEncoder.matches(requestUser.getPassword(), appUser.getPassword())) {
-            return appUser.getId().toString() + " " +
+            return appUser.getToken() + " " +
                     appUser.getFirstName() + " " +
                     appUser.getLastName();
         } else return "no id";
