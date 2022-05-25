@@ -26,8 +26,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/api/v*/registration/**",
                             "/api/v*/authentification/**",
-                            "/api/v*/projectconstructor/publishproject**",
-                            "/api/v*/projectconstructor/getLastProject**")
+                            "/api/v*/projectconstructor/publishproject/**",
+                            "/api/v*/projectconstructor/getLastProject/**",
+                            "/api/v*/projectconstructor/getAllProjects/**")
                     .permitAll()
                 .anyRequest()
                 .authenticated().and()

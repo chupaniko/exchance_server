@@ -2,6 +2,7 @@ package com.example.exchance_server.userproject;
 
 import com.example.exchance_server.appuser.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,5 +17,9 @@ public interface UserProjectRepository extends JpaRepository<UserProject, Long> 
 
     @Override
     List<UserProject> findAll();
+
+    /*@Query("select p from UserProject p")
+    List<UserProject> getAllProjects();*/
+
     //обновление проекта
 }

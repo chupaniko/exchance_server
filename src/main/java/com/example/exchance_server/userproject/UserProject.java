@@ -22,6 +22,16 @@ public class UserProject {
     )
     private AppUser appUser;
     private String projectName;
+
+
+    public String getProjectDescription() {
+        return projectDescription;
+    }
+
+    public String getProjectField() {
+        return projectField;
+    }
+
     private String projectDescription;
     //@Enumerated(EnumType.STRING)
     private String projectField;
@@ -50,6 +60,10 @@ public class UserProject {
 
     public String getProjectName() {
         return projectName;
+    }
+
+    public AppUser getAppUser() {
+        return appUser;
     }
 
     @Override

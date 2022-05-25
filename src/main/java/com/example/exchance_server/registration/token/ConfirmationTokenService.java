@@ -1,5 +1,6 @@
 package com.example.exchance_server.registration.token;
 
+import com.example.exchance_server.appuser.AppUser;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,5 +24,10 @@ public class ConfirmationTokenService {
     public int setConfirmedAt(String token) {
         return confirmationTokenRepository.updateConfirmedAt(
                 token, LocalDateTime.now());
+    }
+
+    public String findTokenByUser(AppUser user) {
+        return confirmationTokenRepository.findTokenByUser(user.getId()).orElseThrow( () ->
+        new IllegalStateException("no token found by user"));
     }
 }

@@ -5,6 +5,8 @@ import com.example.exchance_server.userproject.UserProjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class ConstructorService {
@@ -17,8 +19,8 @@ public class ConstructorService {
                 request.getProjectField());
     }
 
-    public String getAllProjects() {
-        return projectService.getAllProjects().toString();
+    public List<UserProject> getAllProjects() {
+        return projectService.getAllProjects();
     }
 
     public UserProject getLastProject() {
