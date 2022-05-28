@@ -9,9 +9,15 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class RegistrationRequest {
-    private final String firstName;
-    private final String lastName;
+public class UserRegRequest {
+    // TODO: enum
+    private final String role;
+    private final String website;
+    private final String about;
     private final String email;
     private final String password;
+    private final byte[] avatar;
+    private final String phone;
+    private final String region;
+    private final String name;
 }

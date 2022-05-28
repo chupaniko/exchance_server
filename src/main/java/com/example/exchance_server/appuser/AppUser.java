@@ -1,5 +1,7 @@
 package com.example.exchance_server.appuser;
 
+import com.example.exchance_server.userproject.UserProject;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +14,7 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -30,37 +33,69 @@ public class AppUser implements UserDetails {
             generator = "sequence"
     )
     private Long id;
-    private String firstName;
-    private String lastName;
+
+
+    // TODO: проверка на уникальность, если пользователь - организация
+    private String name;
+    @Column(unique = true, nullable = false)
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
     private AppUserRole appUserRole;
     private Boolean locked = false;
     private Boolean enabled = false;
+    private String website;
+    private String about;
+    @Column(unique = true, nullable = false)
+    private String phone;
+    private String region;
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    private byte[] avatar;
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "projects_users",
+            joinColumns = @JoinColumn(name = "app_user_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_project_id"))
+    private Set<UserProject> projects;
 
+    @JsonIgnore
+    @OneToMany
+    private Set<UserProject> projectSubscriptions;
     // для регистрации
-    public AppUser(String firstName,
-                   String lastName,
-                   String email,
+    public AppUser(String name, String email,
                    String password,
-                   AppUserRole appUserRole) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+                   AppUserRole appUserRole,
+                   String website,
+                   String about,
+                   String phone,
+                   String region,
+                   byte[] avatar) {
+        this.name = name;
         this.email = email;
         this.password = password;
         this.appUserRole = appUserRole;
+        this.website = website;
+        this.about = about;
+        this.phone = phone;
+        this.region = region;
+        this.avatar = avatar;
     }
 
-    // для аутентификации
+    // для входа
     public AppUser(String email,
                    String password,
                    AppUserRole appUserRole) {
-        this.firstName = "";
-        this.lastName = "";
+        this.name = "";
         this.email = email;
         this.password = password;
         this.appUserRole = appUserRole;
+        this.website = "";
+        this.about = "";
+        this.phone = "";
+        this.region = "";
+        this.avatar = new byte[]{0};
     }
 
     @Override
@@ -80,21 +115,45 @@ public class AppUser implements UserDetails {
         return email;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
     public Long getId() {
         return id;
     }
 
-    /*public String getToken() {
-        return token;
-    }*/
+    public String getName() {
+        return name;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public byte[] getAvatar() {
+        return avatar;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Set<UserProject> getProjects() {
+        return projects;
+    }
+
+    public Set<UserProject> getProjectSubscriptions() {
+        return projectSubscriptions;
+    }
 
     @Override
     public boolean isAccountNonExpired() {

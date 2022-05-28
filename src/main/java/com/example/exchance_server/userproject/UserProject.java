@@ -2,11 +2,14 @@ package com.example.exchance_server.userproject;
 
 import com.example.exchance_server.appuser.AppUser;
 import com.example.exchance_server.appuser.AppUserRole;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -15,35 +18,83 @@ public class UserProject {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_generator")
     @SequenceGenerator(name = "project_generator", sequenceName = "project_sequence", allocationSize = 1)
     private Long id;
-    @ManyToOne
-    @JoinColumn(
-            nullable = false,
-            name = "app_user_id"
-    )
-    private AppUser appUser;
-    private String projectName;
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "projects_users",
+            joinColumns = @JoinColumn(name = "user_project_id"),
+            inverseJoinColumns = @JoinColumn(name = "app_user_id"))
+    private Set<AppUser> appUsers;
+    @Column(unique = true, nullable = false)
+    private String name;
+    private String launchReason;
+    private LocalDateTime createdAt;
+    private String need;
+    private String goalsResCriteria;
+    private String tasks;
+    private String orgBorders;
+    private String budget;
+    private String time;
+    private String restrictions;
+    private String risks;
+    private String customer;
+    private String leader;
+    private Long likesQty = 0L;
 
-
-    public String getProjectDescription() {
-        return projectDescription;
+    public String getName() {
+        return name;
     }
 
-    public String getProjectField() {
-        return projectField;
+    public String getLaunchReason() {
+        return launchReason;
     }
 
-    private String projectDescription;
-    //@Enumerated(EnumType.STRING)
-    private String projectField;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
-    public UserProject(AppUser appUser,
-                       String projectName,
-                       String projectDescription,
-                       String projectField) {
-        this.appUser = appUser;
-        this.projectName = projectName;
-        this.projectDescription = projectDescription;
-        this.projectField = projectField;
+    public String getNeed() {
+        return need;
+    }
+
+    public String getGoalsResCriteria() {
+        return goalsResCriteria;
+    }
+
+    public String getTasks() {
+        return tasks;
+    }
+
+    public String getOrgBorders() {
+        return orgBorders;
+    }
+
+    public String getBudget() {
+        return budget;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public String getRestrictions() {
+        return restrictions;
+    }
+
+    public String getRisks() {
+        return risks;
+    }
+
+    public String getCustomer() {
+        return customer;
+    }
+
+    public String getLeader() {
+        return leader;
+    }
+
+    public Long getLikesQty() {
+        return likesQty;
     }
 
     /*//для публикации проекта
@@ -58,12 +109,39 @@ public class UserProject {
         return id;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public Set<AppUser> getAppUsers() {
+        return appUsers;
     }
 
-    public AppUser getAppUser() {
-        return appUser;
+    public UserProject(Set<AppUser> appUsers,
+                       String name,
+                       String launchReason,
+                       LocalDateTime createdAt,
+                       String need,
+                       String goalsResCriteria,
+                       String tasks,
+                       String orgBorders,
+                       String budget,
+                       String time,
+                       String restrictions,
+                       String risks,
+                       String customer,
+                       String leader) {
+
+        this.appUsers = appUsers;
+        this.name = name;
+        this.launchReason = launchReason;
+        this.createdAt = createdAt;
+        this.need = need;
+        this.goalsResCriteria = goalsResCriteria;
+        this.tasks = tasks;
+        this.orgBorders = orgBorders;
+        this.budget = budget;
+        this.time = time;
+        this.restrictions = restrictions;
+        this.risks = risks;
+        this.customer = customer;
+        this.leader = leader;
     }
 
     @Override

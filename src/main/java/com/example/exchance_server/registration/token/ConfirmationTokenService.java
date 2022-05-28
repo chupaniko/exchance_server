@@ -30,4 +30,9 @@ public class ConfirmationTokenService {
         return confirmationTokenRepository.findTokenByUser(user.getId()).orElseThrow( () ->
         new IllegalStateException("no token found by user"));
     }
+
+    public String findUnconfirmedTokenByUser(AppUser user) {
+        return confirmationTokenRepository.findUnconfirmedTokenByUser(user.getId()).orElseThrow( () ->
+                new IllegalStateException("no confirmed/unconfirmed token found by user"));
+    }
 }

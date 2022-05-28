@@ -21,8 +21,7 @@ public class RegistrationService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
 
-    public String register(RegistrationRequest request) {
-        // TODO: проверка домена почты на принадлежность к вузу?
+    private AppUser buildUserFromRequest(UserRegRequest request) {
         boolean isValidEmail = emailValidator.
                 test(request.getEmail());
 
@@ -30,23 +29,146 @@ public class RegistrationService {
             throw new IllegalStateException("email not valid");
         }
 
-        String token = appUserService.signUpUser(
-                new AppUser(
-                        request.getFirstName(),
-                        request.getLastName(),
-                        request.getEmail(),
-                        request.getPassword(),
-                        AppUserRole.USER
-                )
-        );
+        AppUserRole userRole;
 
-        String link = "http://localhost:8080/api/v1/registration/confirm?token=" + token;
-        emailSender.send(
+        switch (request.getRole()) {
+            case "STUDENT":
+                userRole = AppUserRole.STUDENT;
+                break;
+            case "UNIVERSITY_EMPLOYEE":
+                userRole = AppUserRole.UNIVERSITY_EMPLOYEE;
+                break;
+            case "ORGANIZATION":
+                userRole = AppUserRole.ORGANIZATION;
+            default:
+                userRole = AppUserRole.SIMPLE_USER;
+                break;
+        }
+
+        return new AppUser(
+                request.getName(),
                 request.getEmail(),
-                buildEmail(request.getFirstName(), link));
+                request.getPassword(),
+                userRole,
+                request.getWebsite(),
+                request.getAbout(),
+                request.getPhone(),
+                request.getRegion(),
+                request.getAvatar());
+    }
 
+    private void sendConfirmTokenEmail(AppUser user, String link) {
+        emailSender.send(
+                user.getEmail(),
+                buildEmail(user.getName(), link));
+    }
+
+    public String registerUser(RegRequest regRequest) {
+        String link = "";
+        String token = "";
+        AppUser user = new AppUser();
+        if (regRequest instanceof PersonRegRequest) {
+            PersonRegRequest personRegRequest = (PersonRegRequest) regRequest;
+            user = buildUserFromRequest(personRegRequest.getUserBody());
+            token = appUserService.signUpUser(user, personRegRequest);
+            link = "http://localhost:8080/api/v1/registerPerson/confirm?token=" + token;
+        }
+        else if (regRequest instanceof OrgRegRequest) {
+            OrgRegRequest orgRegRequest = (OrgRegRequest) regRequest;
+            user = buildUserFromRequest(orgRegRequest.getUserBody());
+            token = appUserService.signUpUser(user, orgRegRequest);
+            link = "http://localhost:8080/api/v1/registerOrganization/confirm?token=" + token;
+        }
+
+        sendConfirmTokenEmail(user, link);
         return token;
     }
+
+    /*public String registerUser(OrgRegRequest request) {
+        AppUser user = buildUserFromRequest(request.getUserBody());
+        String token = appUserService.signUpUser(user, null, request);
+        String link = "http://localhost:8080/api/v1/registerOrganization/confirm?token=" + token;
+        sendConfirmTokenEmail(user, link);
+        return token;
+    }*/
+
+    /*public String registerPerson(PersonRegRequest request) {
+        // TODO: проверка домена почты на принадлежность к вузу?
+        boolean isValidEmail = emailValidator.
+                test(request.getUserBody().getEmail());
+
+        if (!isValidEmail) {
+            throw new IllegalStateException("email not valid");
+        }
+
+        UserRegRequest userRegRequest = request.getUserBody();
+        AppUserRole userRole;
+        switch (userRegRequest.getRole()) {
+            case "STUDENT":
+                userRole = AppUserRole.STUDENT;
+                break;
+            case "UNIVERSITY_EMPLOYEE":
+                userRole = AppUserRole.UNIVERSITY_EMPLOYEE;
+                break;
+            case "ORGANIZATION":
+                userRole = AppUserRole.ORGANIZATION;
+            default:
+                userRole = AppUserRole.SIMPLE_USER;
+                break;
+        }
+
+        String token = appUserService.signUpUser(
+                new AppUser(
+                        userRegRequest.getName(),
+                        userRegRequest.getEmail(),
+                        userRegRequest.getPassword(),
+                        userRole,
+                        userRegRequest.getWebsite(),
+                        userRegRequest.getAbout(),
+                        userRegRequest.getPhone(),
+                        userRegRequest.getRegion(),
+                        userRegRequest.getAvatar()
+                ), request
+        );
+
+        String link = "http://localhost:8080/api/v1/registerPerson/confirm?token=" + token;
+        emailSender.send(
+                userRegRequest.getEmail(),
+                buildEmail(userRegRequest.getName(), link));
+
+        return token;
+    }*/
+
+   /* public String registerOrganization(OrgRegRequest request) {
+        boolean isValidEmail = emailValidator.
+                test(request.getUserBody().getEmail());
+
+        if (!isValidEmail) {
+            throw new IllegalStateException("email not valid");
+        }
+        UserRegRequest userRegRequest = request.getUserBody();
+
+        String token = appUserService.signUpUser(
+                new AppUser(
+                        userRegRequest.getName(),
+                        userRegRequest.getEmail(),
+                        userRegRequest.getPassword(),
+                        AppUserRole.ORGANIZATION,
+                        userRegRequest.getWebsite(),
+                        userRegRequest.getAbout(),
+                        userRegRequest.getPhone(),
+                        userRegRequest.getRegion(),
+                        userRegRequest.getAvatar()
+                ), request
+        );
+
+        String link = "http://localhost:8080/api/v1/registerOrganization/confirm?token=" + token;
+        emailSender.send(
+                userRegRequest.getEmail(),
+                buildEmail(userRegRequest.getName(), link));
+
+        return token;
+    }*/
 
     @Transactional
     public String confirmToken(String token) {

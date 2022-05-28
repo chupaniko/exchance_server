@@ -4,21 +4,36 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "api/v1/registration") @AllArgsConstructor
+@AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class RegistrationController {
 
     private final RegistrationService registrationService;
 
-    @PostMapping
-    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("api/v1/registerPerson")
+    public String registerPerson(@RequestBody PersonRegRequest request) {
+        //signup for Person
+        return registrationService.registerUser(request);
+    }
+
+    @PostMapping("api/v1/registerOrganization")
+    public String registerOrganization(@RequestBody OrgRegRequest request){
+        return registrationService.registerUser(request);
+    }
+
+    /*@PostMapping("api/v1/registration")
     public String register(@RequestBody RegistrationRequest request) {
         //отправка письма с верификацией пользователю
         return registrationService.register(request);
+    }*/
+
+    @GetMapping(path = "api/v1/registerPerson/confirm")
+    public String confirmPerson(@RequestParam("token") String token) {
+        return registrationService.confirmToken(token);
     }
 
-    @GetMapping(path = "confirm")
-    public String confirm(@RequestParam("token") String token) {
-
+    @GetMapping(path = "api/v1/registerOrganization/confirm")
+    public String confirmOrganization(@RequestParam("token") String token) {
         return registrationService.confirmToken(token);
     }
 }

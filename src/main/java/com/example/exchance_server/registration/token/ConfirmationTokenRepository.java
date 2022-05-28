@@ -21,6 +21,11 @@ public interface ConfirmationTokenRepository
     @Query("select t.token from ConfirmationToken t where t.appUser.id = :userId and t.confirmedAt is not null")
     Optional<String> findTokenByUser(Long userId);
 
+    @Query("select t.token from ConfirmationToken t where t.appUser.id = :userId")
+    Optional<String> findUnconfirmedTokenByUser(Long userId);
+
+    /*Optional<String> findByAppUser(AppUser appUser);*/
+
     @Transactional
     @Modifying
     @Query("UPDATE ConfirmationToken c " +

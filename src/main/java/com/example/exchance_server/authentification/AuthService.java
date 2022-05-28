@@ -16,7 +16,7 @@ public class AuthService {
                 new AppUser(
                         request.getEmail(),
                         request.getPassword(),
-                        AppUserRole.USER
+                        request.getUserRole()
                 )
         );
     }

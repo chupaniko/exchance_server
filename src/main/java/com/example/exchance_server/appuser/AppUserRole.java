@@ -1,6 +1,9 @@
 package com.example.exchance_server.appuser;
 
 public enum AppUserRole {
-    USER,
+    STUDENT,
+    UNIVERSITY_EMPLOYEE,
+    SIMPLE_USER,
+    ORGANIZATION,
     ADMIN
 }
