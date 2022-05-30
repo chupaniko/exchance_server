@@ -50,6 +50,11 @@ public class PersonService {
         );
     }
 
+    public Person getPersonByAppUser(AppUser user) {
+        return personRepository.findByAppUser(user).orElseThrow(
+                () -> new IllegalStateException("Person not found"));
+    }
+
     public String addPersonEducation(PersonEduRequest request) {
         PersonEducation education = new PersonEducation(
                 request.getFacultyName(),

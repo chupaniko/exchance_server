@@ -1,5 +1,6 @@
 package com.example.exchance_server.organization;
 
+import com.example.exchance_server.appuser.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,4 +15,6 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
     List<Organization> findAll();
 
     Optional<Organization> findByNumTaxpayer(String numTaxpayer);
+
+    Optional<Organization> findFirstByAppUser(AppUser user);
 }

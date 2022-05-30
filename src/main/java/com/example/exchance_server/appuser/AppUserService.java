@@ -1,7 +1,9 @@
 package com.example.exchance_server.appuser;
 
 import com.example.exchance_server.organization.Organization;
+import com.example.exchance_server.organization.OrganizationRepository;
 import com.example.exchance_server.organization.OrganizationService;
+import com.example.exchance_server.person.Person;
 import com.example.exchance_server.person.PersonService;
 import com.example.exchance_server.registration.OrgRegRequest;
 import com.example.exchance_server.registration.PersonRegRequest;
@@ -38,6 +40,7 @@ public class AppUserService implements UserDetailsService {
     private final PersonService personService;
     private final OrganizationService organizationService;
     private final UserProjectService projectService;
+    private final OrganizationRepository organizationRepository;
 
     @Autowired
     public AppUserService(AppUserRepository appUserRepository,
@@ -45,13 +48,15 @@ public class AppUserService implements UserDetailsService {
                           ConfirmationTokenService confirmationTokenService,
                           @Lazy PersonService personService,
                           OrganizationService organizationService,
-                          @Lazy UserProjectService projectService) {
+                          @Lazy UserProjectService projectService,
+                          OrganizationRepository organizationRepository) {
         this.appUserRepository = appUserRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.confirmationTokenService = confirmationTokenService;
         this.personService = personService;
         this.organizationService = organizationService;
         this.projectService = projectService;
+        this.organizationRepository = organizationRepository;
     }
 
     @Override
@@ -76,7 +81,15 @@ public class AppUserService implements UserDetailsService {
 
     public AppUser getUserByToken(String token) {
         return confirmationTokenService.getToken(token).orElseThrow(() ->
-                new IllegalStateException("token not found")).getAppUser();
+                new IllegalStateException("token not found" + token)).getAppUser();
+    }
+
+    public Person getPersonByAppUser(AppUser user) {
+        return personService.getPersonByAppUser(user);
+    }
+
+    public Organization getOrganizationByAppUser(AppUser user) {
+        return organizationService.getOrganizationByAppUser(user);
     }
 
     public AppUser getUserByEmail(String email) {
@@ -84,7 +97,7 @@ public class AppUserService implements UserDetailsService {
     }
 
     //appuser, person
-    public String signUpUser(AppUser appUser, RegRequest request) {
+    public String signUpUser(AppUser appUser, PersonRegRequest personRegRequest, OrgRegRequest orgRegRequest) {
         boolean userExists = appUserRepository
                 .findByEmail(appUser.getEmail())
                 .isPresent();
@@ -102,9 +115,9 @@ public class AppUserService implements UserDetailsService {
         appUser.setPassword(encodedPassword);
 
         appUserRepository.save(appUser);
-        if (request instanceof PersonRegRequest)
-        personService.registerPerson(appUser, (PersonRegRequest) request);
-        else organizationService.registerOrganization(appUser, (OrgRegRequest) request);
+        if (personRegRequest != null)
+        personService.registerPerson(appUser, personRegRequest);
+        else organizationService.registerOrganization(appUser, orgRegRequest);
 
 
         // TODO: достаем юзера из repository, кидаем ссылку на него в person

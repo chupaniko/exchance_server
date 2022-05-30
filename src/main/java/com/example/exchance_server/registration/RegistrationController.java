@@ -13,12 +13,12 @@ public class RegistrationController {
     @PostMapping("api/v1/registerPerson")
     public String registerPerson(@RequestBody PersonRegRequest request) {
         //signup for Person
-        return registrationService.registerUser(request);
+        return registrationService.registerPerson(request);
     }
 
     @PostMapping("api/v1/registerOrganization")
     public String registerOrganization(@RequestBody OrgRegRequest request){
-        return registrationService.registerUser(request);
+        return registrationService.registerOrganization(request);
     }
 
     /*@PostMapping("api/v1/registration")

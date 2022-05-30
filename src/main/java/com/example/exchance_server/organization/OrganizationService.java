@@ -29,4 +29,9 @@ public class OrganizationService {
         return organizationRepository.findByNumTaxpayer(numTaxpayer).orElseThrow(() ->
                 new IllegalStateException("no organization found"));
     }
+
+    public Organization getOrganizationByAppUser(AppUser user) {
+        return organizationRepository.findFirstByAppUser(user).orElseThrow(() ->
+                new IllegalStateException("no organization found"));
+    }
 }

@@ -26,20 +26,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/api/v*/registerPerson/**",
-                            "/api/v*/registerOrganization/**",
-                            "/api/v*/authentification/**",
-                            "/api/v*/projectconstructor/publishProject/**",
-                            "/api/v*/projectconstructor/getLastProject/**",
-                            "/api/v*/projectconstructor/getAllProjects/**",
-                            "/api/v*/projectconstructor/addUserToProject/**",
-                            "/api/v*/projectconstructor/subscribeToProject/**",
-                            "/api/v*/projectconstructor/getProjectSubscriptions/**",
-                            "/api/v*/projectconstructor/setLikeToProject/**",
-                            "/api/v*/admin/publishManual/**",
-                            "/api/v*/admin/deleteLastManual/**",
-                            "/api/v*/getManual/**")
-                    .permitAll()
+                .antMatchers("/api/v*/registerPerson/**",
+                        "/api/v*/registerOrganization/**",
+                        "/api/v*/authentification/**",
+                        "/api/v*/projectconstructor/publishProject/**",
+                        "/api/v*/projectconstructor/getLastProject/**",
+                        "/api/v*/projectconstructor/getAllProjects/**",
+                        "/api/v*/projectconstructor/addUserToProject/**",
+                        "/api/v*/projectconstructor/subscribeToProject/**",
+                        "/api/v*/projectconstructor/getProjectSubscriptions/**",
+                        "/api/v*/projectconstructor/setLikeToProject/**",
+                        "/api/v*/admin/publishManual/**",
+                        "/api/v*/admin/deleteLastManual/**",
+                        "/api/v*/getManual/**",
+                        "/api/v*/getUserByToken/**",
+                        "/api/v*/getFullUserByToken/**")
+                .permitAll()
                 .anyRequest()
                 .authenticated().and()
                 .formLogin();
@@ -51,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider(){
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider =
                 new DaoAuthenticationProvider();
         provider.setPasswordEncoder(bCryptPasswordEncoder);

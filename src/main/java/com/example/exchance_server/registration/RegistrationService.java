@@ -21,7 +21,7 @@ public class RegistrationService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
 
-    private AppUser buildUserFromRequest(UserRegRequest request) {
+    private AppUser buildUserFromRequest(UserRegRequest request, AppUserRole role) {
         boolean isValidEmail = emailValidator.
                 test(request.getEmail());
 
@@ -29,7 +29,7 @@ public class RegistrationService {
             throw new IllegalStateException("email not valid");
         }
 
-        AppUserRole userRole;
+        /*AppUserRole userRole;
 
         switch (request.getRole()) {
             case "STUDENT":
@@ -43,13 +43,13 @@ public class RegistrationService {
             default:
                 userRole = AppUserRole.SIMPLE_USER;
                 break;
-        }
+        }*/
 
         return new AppUser(
                 request.getName(),
                 request.getEmail(),
                 request.getPassword(),
-                userRole,
+                role,
                 request.getWebsite(),
                 request.getAbout(),
                 request.getPhone(),
@@ -63,23 +63,54 @@ public class RegistrationService {
                 buildEmail(user.getName(), link));
     }
 
-    public String registerUser(RegRequest regRequest) {
+    /*public String registerUser(RegRequest regRequest) {
         String link = "";
         String token = "";
         AppUser user = new AppUser();
-        if (regRequest instanceof PersonRegRequest) {
-            PersonRegRequest personRegRequest = (PersonRegRequest) regRequest;
+        if (regRequest instanceof PersonRegRequest personRegRequest) {
             user = buildUserFromRequest(personRegRequest.getUserBody());
             token = appUserService.signUpUser(user, personRegRequest);
             link = "http://localhost:8080/api/v1/registerPerson/confirm?token=" + token;
         }
-        else if (regRequest instanceof OrgRegRequest) {
-            OrgRegRequest orgRegRequest = (OrgRegRequest) regRequest;
+        else if (regRequest instanceof OrgRegRequest orgRegRequest) {
             user = buildUserFromRequest(orgRegRequest.getUserBody());
             token = appUserService.signUpUser(user, orgRegRequest);
             link = "http://localhost:8080/api/v1/registerOrganization/confirm?token=" + token;
         }
 
+        sendConfirmTokenEmail(user, link);
+        return token;
+    }*/
+
+    public String registerOrganization(OrgRegRequest orgRegRequest) {
+        String link = "";
+        String token = "";
+        AppUser user = buildUserFromRequest(orgRegRequest.getUserBody(), AppUserRole.ORGANIZATION);
+        token = appUserService.signUpUser(user, null, orgRegRequest);
+        link = "http://localhost:8080/api/v1/registerOrganization/confirm?token=" + token;
+        sendConfirmTokenEmail(user, link);
+        return token;
+    }
+
+    public String registerPerson(PersonRegRequest personRegRequest) {
+        String link = "";
+        String token = "";
+        AppUserRole userRole;
+
+        switch (personRegRequest.getUserBody().getRole()) {
+            case "STUDENT":
+                userRole = AppUserRole.STUDENT;
+                break;
+            case "UNIVERSITY_EMPLOYEE":
+                userRole = AppUserRole.UNIVERSITY_EMPLOYEE;
+                break;
+            default:
+                userRole = AppUserRole.SIMPLE_USER;
+                break;
+        }
+        AppUser user = buildUserFromRequest(personRegRequest.getUserBody(), userRole);
+        token = appUserService.signUpUser(user, personRegRequest, null);
+        link = "http://localhost:8080/api/v1/registerPerson/confirm?token=" + token;
         sendConfirmTokenEmail(user, link);
         return token;
     }
